@@ -7,7 +7,7 @@ const httpServer = app.listen(8080);
 const wss = new WebSocketServer({ server: httpServer });
 
 // Initialize Gemini API
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI("AIzaSyCjHojFiuSOam4L-M0rgRHprP36Lf8l7rA");
 
 // Track state
 let educatorOnline = false;
