@@ -877,7 +877,7 @@ wss.on("connection", function connection(ws) {
             active: true,
             startTime: Date.now(),
             doubts: [],
-            timeoutId: setTimeout(() => processDoubts(ws), 90000), // 90 seconds
+            timeoutId: setTimeout(() => processDoubts(ws), 45000), // 90 seconds
           };
 
           // Notify all learners
