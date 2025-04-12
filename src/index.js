@@ -12,6 +12,33 @@ const genAI = new GoogleGenerativeAI("AIzaSyBpceBcqjyXeOdAMEx-dwZOlnWiu-_z_SA");
 // Track state
 let educatorOnline = false;
 let currentTopic = null;
+
+// Doubts
+let doubtSession = {
+  active: false,
+
+  startTime: null,
+
+  doubts: [],
+
+  timeoutId: null,
+};
+// Attention
+
+let attentionCheck = {
+  active: false,
+
+  question: null,
+
+  options: [],
+
+  startTime: null,
+
+  responses: {},
+
+  timeoutId: null,
+};
+
 let activeQuiz = {
   active: false,
   questions: [],
@@ -58,7 +85,6 @@ wss.on("connection", function connection(ws) {
     try {
       const message = JSON.parse(data.toString());
 
-      // Handle different message types
       if (message.type === "register") {
         ws.role = message.role; // 'educator' or 'learner'
 
@@ -100,16 +126,45 @@ wss.on("connection", function connection(ws) {
           }
 
           // If there's an active flashcard, send it to the educator
-          // if (activeFlashcard.active) {
-          //   ws.send(
-          //     JSON.stringify({
-          //       type: "flashcard_active",
-          //       flashcard: activeFlashcard,
-          //       responses: activeFlashcard.responses,
-          //       skippedCount: activeFlashcard.skippedLearners.size,
-          //     })
-          //   );
-          // }
+          if (activeFlashcard.active) {
+            ws.send(
+              JSON.stringify({
+                type: "flashcard_active",
+                flashcard: activeFlashcard,
+                responses: activeFlashcard.responses,
+                skippedCount: activeFlashcard.skippedLearners.size,
+              })
+            );
+          }
+
+          if (attentionCheck.active) {
+            const timeRemaining = Math.max(
+              0,
+              60 - (Date.now() - attentionCheck.startTime) / 1000
+            );
+            ws.send(
+              JSON.stringify({
+                type: "attention_check",
+                question: attentionCheck.question,
+                options: attentionCheck.options,
+                timeRemaining: Math.round(timeRemaining),
+              })
+            );
+          }
+
+          // If there's an active doubt session, send it to the new learner
+          if (doubtSession.active) {
+            const timeRemaining = Math.max(
+              0,
+              90 - (Date.now() - doubtSession.startTime) / 1000
+            );
+            ws.send(
+              JSON.stringify({
+                type: "doubt_session",
+                timeRemaining: Math.round(timeRemaining),
+              })
+            );
+          }
 
           // If there's an active AI test, send it to the educator
           if (activeAITest.active) {
@@ -601,6 +656,8 @@ wss.on("connection", function connection(ws) {
           //     timeLimit: 30,
           //   })
           // );
+        } else if (ws.role === "learner" && attentionCheck.active) {
+          attentionCheck.responses[ws.learnerId] = message.answer;
         } else {
           // This learner has completed all questions
           console.log(`Learner ${ws.learnerId} has completed all questions`);
@@ -813,6 +870,44 @@ wss.on("connection", function connection(ws) {
             }
           });
         }
+      } else if (message.type === "launch_doubt_session") {
+        if (ws.role === "educator") {
+          // Start a new doubt session
+          doubtSession = {
+            active: true,
+            startTime: Date.now(),
+            doubts: [],
+            timeoutId: setTimeout(() => processDoubts(ws), 90000), // 90 seconds
+          };
+
+          // Notify all learners
+          broadcastToLearners({
+            type: "doubt_session",
+            timeRemaining: 90,
+          });
+        }
+      } else if (message.type === "submit_doubt") {
+        if (ws.role === "learner" && doubtSession.active) {
+          doubtSession.doubts.push(message.doubt);
+        }
+      } else if (message.type === "launch_attention_check") {
+        if (ws.role === "educator") {
+          attentionCheck = {
+            active: true,
+            question: message.question,
+            options: message.options,
+            startTime: Date.now(),
+            responses: {},
+            timeoutId: setTimeout(() => processAttentionCheck(ws), 60000), // 60 seconds
+          };
+          // Notify all learners
+          broadcastToLearners({
+            type: "attention_check",
+            question: message.question,
+            options: message.options,
+            timeRemaining: 60,
+          });
+        }
       }
     } catch (error) {
       console.error("Error processing message:", error);
@@ -823,6 +918,21 @@ wss.on("connection", function connection(ws) {
   ws.on("close", function () {
     if (ws.role === "educator") {
       educatorOnline = false;
+
+      // Clear any active sessions
+      if (doubtSession.timeoutId) {
+        clearTimeout(doubtSession.timeoutId);
+      }
+      if (attentionCheck.timeoutId) {
+        clearTimeout(attentionCheck.timeoutId);
+      }
+
+      // Reset sessions
+      doubtSession.active = false;
+      attentionCheck.active = false;
+
+      // Notify all learners that educator is offline
+      broadcastToLearners({ type: "educator_status", online: false });
 
       // Reset active quiz status but keep the learners set
       activeQuiz.active = false;
@@ -1458,4 +1568,136 @@ async function generateAITestReport(learnerId, learnerName, learnerWs) {
   }
 }
 
+// Process attention check responses
+
+function processAttentionCheck(educatorWs) {
+  attentionCheck.active = false;
+
+  // Calculate results
+
+  const results = attentionCheck.options.map((option) => ({
+    option: option,
+
+    count: 0,
+
+    percentage: 0,
+  }));
+
+  const totalResponses = Object.keys(attentionCheck.responses).length;
+
+  if (totalResponses > 0) {
+    // Count responses for each option
+
+    Object.values(attentionCheck.responses).forEach((answer) => {
+      const index = attentionCheck.options.indexOf(answer);
+
+      if (index !== -1) {
+        results[index].count++;
+      }
+    });
+
+    // Calculate percentages
+
+    results.forEach((result) => {
+      result.percentage = Math.round((result.count / totalResponses) * 100);
+    });
+  }
+
+  // Send results to educator
+
+  if (educatorWs.readyState === WebSocket.OPEN) {
+    educatorWs.send(
+      JSON.stringify({
+        type: "attention_results",
+
+        results: results,
+
+        totalResponses: totalResponses,
+      })
+    );
+  }
+}
+
+// Process doubts using Gemini API
+
+async function processDoubts(educatorWs) {
+  doubtSession.active = false;
+
+  if (doubtSession.doubts.length === 0) {
+    if (educatorWs.readyState === WebSocket.OPEN) {
+      educatorWs.send(
+        JSON.stringify({
+          type: "doubt_summary",
+          summary: "No doubts were submitted during this session.",
+        })
+      );
+    }
+
+    return;
+  }
+
+  try {
+    // In a real application, you would call the Gemini API here
+
+    // For now, we'll simulate it with a delay and formatted response
+    let timeoutId = null;
+    let isTimedOut = false;
+    const allDoubts = doubtSession.doubts.join("\n- ");
+    console.log(allDoubts);
+    const prompt = `Segregate the list of doubts into Conceptual and Theoretical Doubts, then, tag and summarise them.
+    The List :-
+    ${allDoubts}`;
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    // Create a promise that will reject after a timeout
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => {
+        isTimedOut = true;
+        reject(new Error("API request timed out"));
+      }, 15000); // Match timeout with frontend (15 seconds)
+    });
+
+    // Race between the API call and the timeout
+    const result = await Promise.race([
+      model.generateContent(prompt),
+      timeoutPromise,
+    ]);
+
+    // Clear timeout if we got a response
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+
+    if (isTimedOut) {
+      throw new Error("API request timed out");
+    }
+
+    const response = await result.response;
+    const text = response.text();
+    console.log("Received response from Gemini API");
+
+    if (educatorWs.readyState === WebSocket.OPEN) {
+      educatorWs.send(
+        JSON.stringify({
+          type: "doubt_summary",
+          summary: text,
+          rawDoubts: doubtSession.doubts,
+        })
+      );
+    }
+  } catch (error) {
+    console.error("Error processing doubts:", error);
+
+    if (educatorWs.readyState === WebSocket.OPEN) {
+      educatorWs.send(
+        JSON.stringify({
+          type: "doubt_summary",
+
+          error: "Failed to process doubts",
+        })
+      );
+    }
+  }
+}
 console.log("Server is running on http://localhost:8080");
