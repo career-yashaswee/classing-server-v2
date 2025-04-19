@@ -1,5 +1,6 @@
 import express from "express";
 import { WebSocketServer, WebSocket } from "ws";
+import { app, httpServer, wss } from "../server.js";
 
 function broadcastToLearners(message) {
   const messageStr = JSON.stringify(message);

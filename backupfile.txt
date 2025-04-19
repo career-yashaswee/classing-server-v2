@@ -916,6 +916,7 @@ wss.on("connection", function connection(ws) {
 
   // When a client disconnects
   ws.on("close", function () {
+    
     if (ws.role === "educator") {
       educatorOnline = false;
 

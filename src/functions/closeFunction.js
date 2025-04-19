@@ -7,8 +7,7 @@ import broadcastToLearners from "../functions/broadcastToLearners.js";
 
 // Track state
 let educatorOnline = false;
-
-const closeFunction = () => {
+const closeFunction = (ws) => {
   if (ws.role === "educator") {
     educatorOnline = false;
 
