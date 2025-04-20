@@ -2,7 +2,7 @@ import express from "express";
 import { WebSocketServer, WebSocket } from "ws";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import genAI from "../genAI.js";
-import { app, httpServer, wss } from "../server.js";
+import { app, httpServer, wss } from "../servermodule.js";
 
 // Import initilizers
 import activeAITest from "../data/initializers/activeAITest.js";

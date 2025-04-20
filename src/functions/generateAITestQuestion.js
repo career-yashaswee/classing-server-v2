@@ -1,7 +1,7 @@
 import express from "express";
 import { WebSocketServer, WebSocket } from "ws";
 import genAI from "../genAI.js"; // Importing the genAI module for API calls
-import { app, httpServer, wss } from "../server.js"; // Importing the server and WebSocket server
+import { app, httpServer, wss } from "../servermodule.js"; // Importing the server and WebSocket server
 import activeAITest from "../data/initializers/activeAITest.js"; // Importing the activeAITest object
 
 // Function to generate an AI test question
