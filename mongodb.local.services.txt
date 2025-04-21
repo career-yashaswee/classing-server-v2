@@ -1,0 +1,4 @@
+Start Services: brew services start mongodb/brew/mongodb-community
+Start Shell: mongosh
+Stop Servise: brew services stop mongodb/brew/mongodb-community
+Stop Shell: control + z

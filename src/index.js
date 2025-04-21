@@ -64,7 +64,8 @@ app.use(
 app.use(express.json()); // Middleware for JSON parsing
 
 // Ensure MONGODB_URI is set
-const mongoURI = process.env.MONGODB_URI;
+const mongoURI = process.env.MONGODB_LOCAL_URI;
+// console.log("Mongo URI:", mongoURI); // Log the MongoDB URI for debugging
 if (!mongoURI) {
   console.error("Error: MONGODB_URI is not set in the environment variables.");
   process.exit(1); // Exit process if MongoDB URI is missing.
@@ -80,7 +81,7 @@ mongoose
     process.exit(1);
   });
 
-  // --ROUTES--
+// --ROUTES--
 app.use("/activity", activityCollectionRoutes);
 app.use("/session", sessionRoutes);
 app.use("/doubt", doubtRoutes);
@@ -116,7 +117,6 @@ app.use("/revision", revisionRoutes);
 app.use("/mission", missionRoutes);
 app.use("/exam", examRoutes);
 app.use("/result", resultRoutes);
-
 
 // Global Error Handler
 app.use((err, req, res, next) => {
