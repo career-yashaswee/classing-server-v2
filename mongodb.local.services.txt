@@ -2,3 +2,13 @@ Start Services: brew services start mongodb/brew/mongodb-community
 Start Shell: mongosh
 Stop Servise: brew services stop mongodb/brew/mongodb-community
 Stop Shell: control + z
+
+Steps for MongoDB Community Edition:
+1.⁠ ⁠brew tap mongodb/brew
+2.⁠ ⁠⁠brew install mongodb-community@7.0
+3.⁠ ⁠⁠brew services start mongodb-community@7.0
+4.⁠ ⁠⁠mongodb://localhost:27017 (Open on Compass Option, will come when u paste in Crome browser)
+5.⁠ ⁠⁠brew install mongosh / brew reinstall mongosh (For reinstallation).
+6.⁠ ⁠⁠mongosh (To start the Services).
+
+You will see a component is made with the LocalHost in the Compass.

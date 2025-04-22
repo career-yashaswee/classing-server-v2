@@ -776,6 +776,13 @@ function message(ws, data, isBinary) {
       }
     } else if (message.type === "launch_interest_investigation") {
       if (ws.role === "educator") {
+        // State Persistence for the launch interest investigation
+        // investigationState = {
+        //   isActive: true,
+        //   question: message.question,
+        //   investigation_type: message.investigation_type,
+        // };
+
         broadcastToLearners({
           type: "interest_display",
           question: message.question,
