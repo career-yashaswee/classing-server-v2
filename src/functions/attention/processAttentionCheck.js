@@ -1,6 +1,6 @@
 import express from "express";
 import { WebSocketServer, WebSocket } from "ws";
-import attentionCheck from "../data/initializers/attentionCheck.js";
+import attentionCheck from "../../data/initializers/attentionCheck.js";
 
 function processAttentionCheck(educatorWs) {
   attentionCheck.active = false;

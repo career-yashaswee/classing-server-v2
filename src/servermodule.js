@@ -1,5 +1,3 @@
-// src/server.js
-// This file sets up an Express server and a WebSocket server.
 import express from "express";
 import { WebSocketServer, WebSocket } from "ws";
 

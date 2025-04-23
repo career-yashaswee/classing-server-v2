@@ -1,42 +1,34 @@
+import generateUniqueId from "./functions/utilities/generateUniqueId.js";
 import { app, httpServer, wss } from "./servermodule.js";
 
-import messageParameters from "./functions/message.js";
-import closeFunction from "./functions/closeFunction.js";
+import closeFunction from "./socket/closeFunction.js";
+import wsConnections from "./socket/wsConnections.js";
+import "./queue/message-worker.js";
+import message from "./functions/message.js";
 
-const socketConnection = () => {
-    console.log("SOCKET Listening on http://localhost:8080");
+const socket = () => {
+  console.log(
+    `SOCKET [${process.env.SOCKET_HOSTNAME}:${process.env.SOCKET_PORT}]`
+  );
 
-    wss.on("connection", function connection(ws) {
-        ws.on("error", console.error);
-        // Set the role of the client
-        console.log("New client connected");
-        ws.on("message", messageParameters(ws));
-        // When a client disconnects
-        ws.on("close", () => {
-          closeFunction(ws);
-        });
-      
-        // Send welcome message
-        ws.send(
-          JSON.stringify({ type: "welcome", message: "Connected to Classing!" })
-        );
-      });
+  wss.on("connection", function connection(ws) {
+    const clientId = generateUniqueId();
+    ws.clientId = clientId;
+    console.log(clientId);
+    wsConnections.set(clientId, ws);
+    ws.on("error", console.error);
+    ws.on("message", message(ws));
+    ws.on("close", () => {
+      closeFunction(ws);
+      wsConnections.delete(clientId);
+    });
+    ws.send(
+      JSON.stringify({
+        type: "WELCOME",
+        message: "Connected to Classing Server!",
+      })
+    );
+  });
 };
 
-// wss.on("connection", function connection(ws) {
-//   ws.on("error", console.error);
-//   // Set the role of the client
-//   console.log("New client connected");
-//   ws.on("message", messageParameters(ws));
-//   // When a client disconnects
-//   ws.on("close", () => {
-//     closeFunction(ws);
-//   });
-
-//   // Send welcome message
-//   ws.send(
-//     JSON.stringify({ type: "welcome", message: "Connected to Classing!" })
-//   );
-// });
-
-export default socketConnection;
+export default socket;

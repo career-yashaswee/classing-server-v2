@@ -1,9 +1,9 @@
 import express from "express";
 import { WebSocketServer, WebSocket } from "ws";
-import genAI from "../genAI.js";
+import ai from "../../ai.js";
 
 // Import initilizers
-import doubtSession from "../data/initializers/doubtSession.js";
+import doubtSession from "../../data/initializers/doubtSession.js";
 
 // Process doubts using Gemini API
 async function processDoubts(educatorWs) {
@@ -33,7 +33,7 @@ async function processDoubts(educatorWs) {
     const prompt = `Segregate the list of doubts into Conceptual and Theoretical Doubts, then, tag and summarise them.
       The List :-
       ${allDoubts}`;
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Create a promise that will reject after a timeout
     const timeoutPromise = new Promise((_, reject) => {

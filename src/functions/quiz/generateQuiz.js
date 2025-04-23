@@ -1,7 +1,6 @@
 import express from "express";
 import { WebSocketServer, WebSocket } from "ws";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import genAI from "../genAI.js";
+import ai from "../../ai.js";
 
 // Function to generate quiz questions using Gemini API
 async function generateQuiz(keywords, educatorWs) {
@@ -23,10 +22,21 @@ async function generateQuiz(keywords, educatorWs) {
     ]`;
 
     // Call Gemini API
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    var text = "";
+    const vendor = process.env.AI_VENDOR;
+    if (vendor == "ollama") {
+      const response = await axios.post("http://localhost:11434/api/generate", {
+        model: "llama3.2",
+        prompt,
+      });
+      text = response.data;
+      console.log(text);
+    } else {
+      const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      text = response.text();
+    }
 
     try {
       // Extract JSON from response text

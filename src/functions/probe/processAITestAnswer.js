@@ -1,9 +1,9 @@
 import { WebSocketServer, WebSocket } from "ws";
-import genAI from "../genAI.js"; // Importing the genAI module for API calls
-import { app, httpServer, wss } from "../servermodule.js"; // Importing the server and WebSocket server
-import activeAITest from "../data/initializers/activeAITest.js";
-import generateAITestQuestion from "../functions/generateAITestQuestion.js"; // Importing the function to generate AI test questions
-import generateAITestReport from "../functions/generateAITestReport.js"; // Importing the function to generate AI test reports
+import ai from "../../ai.js";
+import { app, httpServer, wss } from "../../servermodule.js"; // Importing the server and WebSocket server
+import activeAITest from "../../data/initializers/activeAITest.js";
+import generateAITestQuestion from "./generateAITestQuestion.js "; // Importing the function to generate AI test questions
+import generateAITestReport from "./generateAITestReport.js"; // Importing the function to generate AI test reports
 
 async function processAITestAnswer(learnerId, learnerName, answer, learnerWs) {
   try {
@@ -26,7 +26,7 @@ async function processAITestAnswer(learnerId, learnerName, answer, learnerWs) {
         feedbackPrompt += ` Additional context: ${activeAITest.prompt}`;
       }
 
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
       const result = await model.generateContent(feedbackPrompt);
       const response = await result.response;
       feedback = response.text().trim();

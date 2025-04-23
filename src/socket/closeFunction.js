@@ -3,7 +3,7 @@ import activeQuiz from "../data/initializers/activeQuiz.js";
 import attentionCheck from "../data/initializers/attentionCheck.js";
 import doubtSession from "../data/initializers/doubtSession.js";
 import activeFlashcard from "../data/initializers/activeFlashcard.js";
-import broadcastToLearners from "../functions/broadcastToLearners.js";
+import broadcastToLearners from "./broadcastToLearners.js";
 
 // Track state
 let educatorOnline = false;

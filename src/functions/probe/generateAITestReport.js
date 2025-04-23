@@ -1,11 +1,11 @@
 import express from "express";
 import { WebSocketServer, WebSocket } from "ws";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import genAI from "../genAI.js";
-import { app, httpServer, wss } from "../servermodule.js";
+import ai from "../../ai.js";
+import { app, httpServer, wss } from "../../servermodule.js";
 
 // Import initilizers
-import activeAITest from "../data/initializers/activeAITest.js";
+import activeAITest from "../../data/initializers/activeAITest.js";
 
 // Function to generate a final report for an AI test
 async function generateAITestReport(learnerId, learnerName, learnerWs) {
@@ -35,7 +35,7 @@ async function generateAITestReport(learnerId, learnerName, learnerWs) {
     }
 
     // Call Gemini API
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
     const result = await model.generateContent(reportPrompt);
     const response = await result.response;
     const report = response.text().trim();

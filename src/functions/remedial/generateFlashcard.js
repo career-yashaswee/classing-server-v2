@@ -1,7 +1,7 @@
 import express from "express";
 import { WebSocketServer, WebSocket } from "ws";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import genAI from "../genAI.js"; // Importing the genAI module for API calls
+import ai from "../../ai.js"; // Importing the ai module for API calls
 
 // Function to generate flashcard content using Gemini API
 async function generateFlashcard(title, subTopics, cardType, educatorWs) {
@@ -80,7 +80,7 @@ async function generateFlashcard(title, subTopics, cardType, educatorWs) {
     console.log(`Sending API request for flashcard: ${title}`);
 
     // Call Gemini API with timeout handling
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Create a promise that will reject after a timeout
     const timeoutPromise = new Promise((_, reject) => {
