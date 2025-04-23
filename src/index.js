@@ -64,7 +64,7 @@ app.use(
 app.use(express.json()); // Middleware for JSON parsing
 
 // Ensure MONGODB_URI is set
-const mongoURI = process.env.MONGODB_LOCAL_URI;
+const mongoURI = process.env.MONGODB_URI;
 // console.log("Mongo URI:", mongoURI); // Log the MongoDB URI for debugging
 if (!mongoURI) {
   console.error("Error: MONGODB_URI is not set in the environment variables.");
