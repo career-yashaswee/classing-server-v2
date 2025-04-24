@@ -35,5 +35,4 @@ EXPOSE 3005
 EXPOSE 8080
 
 # Start Redis and Node server using bash
-CMD ["redis-server", "--daemonize", "yes"]
-RUN npm run dev
+CMD redis-server --daemonize yes && npm run dev
