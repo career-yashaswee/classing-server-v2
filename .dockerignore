@@ -1,0 +1,43 @@
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.git
+
+# Node modules - do not copy node_modules into Docker image
+node_modules/
+
+# Logs - do not include log files
+*.log
+
+# Environment files - .env files should not be included for security reasons
+.env
+
+# Local development or build directories
+dist/
+build/
+tmp/
+.cache/
+
+# Git files - do not include Git-related files
+.git/
+.gitignore
+
+# Docker-related files - don't include Docker files in the image
+Dockerfile
+.dockerignore
+
+# Operating system files (macOS, Windows, etc.)
+.DS_Store
+Thumbs.db
+
+# Test or coverage files
+coverage/
+
+# IDE and editor files (VS Code, JetBrains, etc.)
+.vscode/
+.idea/
+
+# Any other unnecessary files that should not be in the Docker image
+*.md
+*.json
