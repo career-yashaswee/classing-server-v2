@@ -13,9 +13,10 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Install Ollama
-# Install Ollama
+
 RUN npm install -g ollama
 RUN ollama run llama3.2:1b || true
+
 
 # Clone the repository
 WORKDIR /classing
@@ -30,8 +31,9 @@ RUN npm install -g nodemon
 # Install dependencies
 RUN npm install
 # Expose port for the server
-EXPOSE 3000
+EXPOSE 3005
 EXPOSE 8080
 
 # Start Redis and Node server using bash
-CMD redis-server --daemonize yes && npm run dev
+CMD ["redis-server", "--daemonize", "yes"]
+RUN npm run dev

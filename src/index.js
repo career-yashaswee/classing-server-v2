@@ -3,43 +3,42 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 
-import activityCollectionRoutes from "../routes/activityRoutes.js";
-import sessionRoutes from "../routes/sessionRoutes.js";
-import doubtRoutes from "../routes/doubtRoutes.js";
-import iVizRoutes from "../routes/iVizRoutes.js";
-import avatarRoutes from "../routes/avatarRoutes.js";
-import taskRoutes from "../routes/taskRoutes.js";
-import sclassRoutes from "../routes/sclassRoutes.js";
-import chatRoutes from "../routes/chatRoutes.js";
-import settingRoutes from "../routes/settingRoutes.js";
-import kanbanRoutes from "../routes/kanbanRoutes.js";
-import attentionRoutes from "../routes/attentionRoutes.js";
-import deckRoutes from "../routes/deck.js";
-import quizRoutes from "../routes/quiz.js";
-import deckFCRoutes from "../routes/deckFCRoutes.js";
-import flashCard from "../routes/flashCardRoutes.js";
-import socratesProb from "../routes/socratesProbRoutes.js";
-import interestCollection from "../routes/interestCollectionRoutes.js";
 import attentionAttemptRoutes from "../routes/attentionAttemptRoutes.js";
-import simulationRoutes from "../routes/simulation.js";
-import resourceRoutes from "../routes/resource.js";
-import nudgeRoutes from "../routes/nudgeRoutes.js";
+import interestCollection from "../routes/interestCollectionRoutes.js";
 import doubtCollectionRoutes from "../routes/doubtCollectionRoutes.js";
+import taskSubmissionRoutes from "../routes/taskSubmissionRoutes.js";
+import conceptHistoryRoutes from "../routes/conceptHistoryRoutes.js";
+import taskComponentRoutes from "../routes/taskComponentsRoutes.js";
+import activityCollectionRoutes from "../routes/activityRoutes.js";
 import leaderboardRoutes from "../routes/leaderboardRoutes.js";
 import engagementRoutes from "../routes/engagementRoutes.js";
-import badgeRoutes from "../routes/badgeAwardRoutes.js";
+import attentionRoutes from "../routes/attentionRoutes.js";
+import socratesProb from "../routes/socratesProbRoutes.js";
 import audiobookRoutes from "../routes/audiobookRoutes.js";
-import videoRoutes from "../routes/videoRoutes.js";
-import taskComponentRoutes from "../routes/taskComponentsRoutes.js";
-import taskSubmissionRoutes from "../routes/taskSubmissionRoutes.js";
-import conceptRoutes from "../routes/conceptRoutes.js";
-import conceptHistoryRoutes from "../routes/conceptHistoryRoutes.js";
 import revisionRoutes from "../routes/revisionRoutes.js";
+import badgeRoutes from "../routes/badgeAwardRoutes.js";
+import sessionRoutes from "../routes/sessionRoutes.js";
+import settingRoutes from "../routes/settingRoutes.js";
+import simulationRoutes from "../routes/simulation.js";
+import conceptRoutes from "../routes/conceptRoutes.js";
 import missionRoutes from "../routes/missionRoutes.js";
-import examRoutes from "../routes/examRoutes.js";
+import avatarRoutes from "../routes/avatarRoutes.js";
+import sclassRoutes from "../routes/sclassRoutes.js";
+import kanbanRoutes from "../routes/kanbanRoutes.js";
+import deckFCRoutes from "../routes/deckFCRoutes.js";
+import flashCard from "../routes/flashCardRoutes.js";
 import resultRoutes from "../routes/resultRoutes.js";
+import doubtRoutes from "../routes/doubtRoutes.js";
+import resourceRoutes from "../routes/resource.js";
+import nudgeRoutes from "../routes/nudgeRoutes.js";
+import videoRoutes from "../routes/videoRoutes.js";
+import iVizRoutes from "../routes/iVizRoutes.js";
+import taskRoutes from "../routes/taskRoutes.js";
+import chatRoutes from "../routes/chatRoutes.js";
+import examRoutes from "../routes/examRoutes.js";
+import deckRoutes from "../routes/deck.js";
+import quizRoutes from "../routes/quiz.js";
 
-import LOG from "./log/LOG.js";
 import socket from "./socket.js";
 
 const app = express();
@@ -95,6 +94,9 @@ app.use("/chat", chatRoutes);
 app.use("/quiz", quizRoutes);
 app.use("/exam", examRoutes);
 app.use("/viz", iVizRoutes);
+app.use("/ping", (req, res) => {
+  res.status(200).send("pong");
+});
 
 // Global Error Handler
 app.use((err, req, res, next) => {
@@ -102,8 +104,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-// Set PORT dynamically.
-const PORT = process.env.DB_PORT || 3000;
+const PORT = 3005;
 
 app.listen(PORT, () => {
   console.log(`SERVER [http://localhost:${PORT}]`);
