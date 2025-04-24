@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import LOG from "./log/LOG.js";
 
-const key = process.env.GEMINI_API_KEY;
+let key = process.env.GEMINI_API_KEY;
 if (!key) {
   console.log(LOG.AI.GEMINI_KEY_ERROR);
   console.log(LOG.AI.AI_KEY_RESORT);

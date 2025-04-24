@@ -18,7 +18,9 @@ connection.on("error", (err) => {
   console.log(LOG.DB.DB_REDIS_ERROR, err);
 });
 
-const mongoURI = process.env.MONGODB_URI;
+// --MONGODB CONNECTION--
+const mongoURI = process.env.MONGODB_URI; // "mongodb://localhost:27017/classing" for LOCAL SERVER
+// const mongoURI = process.env.MONGODB_LOCAL_URI;
 if (!mongoURI) {
   console.error(LOG.MONGODB_URI_ERROR);
   process.exit(1);

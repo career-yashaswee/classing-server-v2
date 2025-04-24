@@ -1,0 +1,84 @@
+🔹 Docker Concepts
+
+🔸 Layers of Docker
+Docker images are built in layers. Each command in the Dockerfile creates a new layer. When rebuilding, 
+unchanged layers are reused from the cache, which speeds up the build process.
+
+🔸 Process of Containerization
+1. Docker uses images to create containers.
+2. Each image is made of multiple layers.
+3. Containers are isolated environments created from these images.
+4. You can run, pause, stop, or delete containers independently.
+5. Containers share the OS kernel but have isolated processes and filesystems.
+
+🔹 Basic Docker Commands
+Command	: Description
+docker info	: View detailed information about Docker including version, storage, and container count.
+docker pull <image>	: Download an image from Docker Hub.
+docker search <keyword>	: Search Docker Hub for images matching the keyword.
+docker ps : List only the running containers.
+docker ps -a : List all containers (running and stopped).
+docker inspect <container_id> : View detailed low-level information about a specific container. Example: docker inspect 56e0629ae7fc
+
+🔹 Running Containers
+Command	: Description
+docker run --name <container_name> <image_name>:<tag> : Run a container from an image and give it a custom name.
+docker run --name <container_name> -d <image_name>:<tag> : Run the container in the background (detached mode). It returns the container ID.
+docker run --name <container_name> -it -d <image_name>:<tag> : Run interactively with terminal access in detached mode. -i = interactive, -t = terminal.
+docker exec -it <container_name> <command> : Run a command inside a running container.
+docker run --name <container_name> -it --rm <image_name>:<tag> : Run the container and automatically remove it when it exits.
+
+🔹 Managing Containers
+Command	: Description
+docker stop <container1> <container2> ... : Stop one or more running containers.
+docker start <container_name> : Start a stopped container.
+docker restart <container_name> : Restart a container.
+docker rm <container_name> : Remove a container. You can use the first few characters of the container ID too.
+docker rmi <image_name> : Remove an image from the local system.
+docker container prune : Remove all stopped containers at once. Only works if none are currently running.
+docker logs <container_name or ID> : View the logs/output of a specific container.
+
+🔹 Using Environment Variables
+Command : Description
+docker run --name <container_name> -e MYSQL_ROOT_PASSWORD=<your_password> -d mysql : Run a MySQL container with a root password using environment variables.
+docker exec -it <mysql_container> mysql -u root -p : Access the MySQL terminal from the running container.
+docker run --name <container_name> -d -p <host_port>:<container_port> <image_name> : Expose a port to allow external access. Example: 8080:80 maps host port 8080 to container port 80.
+docker <resource> prune : Clean up Docker resources. For example: docker image prune, docker network prune.
+
+
+
+🔹 Concepts of Docker:
+
+🔹 Layers of Docker :
+🔹 Process of Containerization :
+Make the Changes accordingly for the following Information.
+Docker info: To check the information of the docker about the version recently used.
+Docker pull: To pull the image from the hub.docker.com.
+Docker search <name_of_the_key>: To check what are the Images Present in the image Search List.
+Docker ps: To check what are running Containers present in the Docker.
+Docker ps -a: To check all the running/paused Containers to the file.
+Docker inspect <id_of_containerFile>: To inspect the Container file and see the writing of the file accordingly. Eg: docker inspect 56e0629ae7fc (56e0629ae7fc: The Container file ID).
+docker run --name <nameOfFile> <imageName>:<tagName> : To run the image for making the Containers and give the name of the file by our own accordingly.
+docker run --name <nameOfFile> -d <imageName>:<tagName> : Run the container in background and print the container ID. (Note: ‘-d’ is needed in command. Also the above command is the same as this command. Just the difference is the above command will not return anything, but this command will return the ID of the new Container. It means to run the id in the background).
+docker run --name <nameOfFile> -it -d <imageName>:<tagName> : (-i -t or -it) “i” 	means interaction and -t means Terminal i.e. Interaction with the Terminal Command.
+docker exec -it <cointainer_name> <command>: It will run the file like the files run on our system from containers. (Note: If we want the <command> then we have to write the Question No. 10’th Point of this Document. Docker exec command allows us to run commands inside the Docker Container.)
+docker run --name <nameOfFile> -it –rm <imageName>:<tagName> : After running the file it will automatically been Removed when the file is exited after running.
+Docker stop <cointainerName> {<container_Name 2> <container_Name3>}: to stop the container from Running.
+Docker start <cointainerName>: to start the container for Running.
+Docker restart <cointainerName>: to restart the Container.	
+Docker rm <cointainer_name/container_value>: to remove/delete the container from the docker. (Note: If we write the Container ID in first 3-4 digits also then also it will work.)
+Docker rmi <image_name>: to remove/delete the Image from the Docker. 
+Docker container prune: to remove all the containers at once. (It will only work when the files are not running.)	
+Docker logs <container_name/container_id> : to view the logs generated by a specific Docker container named. (i.e. ashmin-bhaumik, python-slim. Also we can say that it returns the History).
+
+🔹 WIth ENVIRONMENT Variables: 
+docker run --name <name_of_file> -e MYSQL_ROOT_PASSWORD=<setThePassword> -d mysql : run the environment variable of the MYSQL image.    
+docker exec -it mysqlImageConatiner mysql -u root -p : to start writing.	
+docker run --name <nameOfContainer> -d -p 8080:80(<machinePortNumer:ContainerPortNumber>) <nameOfImage/AnyName> : To expose the External Port Number(myMachine : containerPort)
+Docker <someNames> prune : to close the Containers, networks or Images
+
+
+🔹 BUILDING A DOCKER:
+Docker build -t <imageName> <dockerImageDirectoryPosition> : The term is used to build the Images for the Containers.
+Docker build –no-cache -t <imageName> <dockerImageDirectoryPosition> : The term –no-cache is used so that it doesn’t take the help of the other Layer OR doesn’t use the old layer of the other image.
+.dockerignore file : The file that you don’t want in the container will be ignored. In the file making keep the name “.dockerignore” and write the name of the file in it.

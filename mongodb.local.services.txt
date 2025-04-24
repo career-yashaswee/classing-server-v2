@@ -1,3 +1,4 @@
+MONGODB SERVICES
 Start Services: brew services start mongodb/brew/mongodb-community
 Start Shell: mongosh
 Stop Servise: brew services stop mongodb/brew/mongodb-community
@@ -12,3 +13,9 @@ Steps for MongoDB Community Edition:
 6.⁠ ⁠⁠mongosh (To start the Services).
 
 You will see a component is made with the LocalHost in the Compass.
+
+Redis SERVICES
+Start Services: brew services start redis
+Stop Services: brew services stop redis
+Test Redis: redis-cli ping (OUTPUT: PONG)
+
