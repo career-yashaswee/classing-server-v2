@@ -13,6 +13,7 @@ async function testLocalLLM() {
     .then((response) => response.text())
     .then((text) => {
       const json = JSON.parse(text);
+      console.log(json);
       return json.done && json.done_reason === "stop";
     })
     .catch((error) => {

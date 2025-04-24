@@ -33,6 +33,7 @@ RUN npm install
 # Expose port for the server
 EXPOSE 3005
 EXPOSE 8080
+EXPOSE 11434
 
 # Start Redis and Node server using bash
 CMD redis-server --daemonize yes && npm run dev
