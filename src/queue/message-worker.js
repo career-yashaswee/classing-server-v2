@@ -12,7 +12,7 @@ const worker = new Worker(
     const { clientId, data } = job.data;
     const ws = wsConnections.get(clientId);
     if (ws && ws.readyState === ws.OPEN) {
-      messsageHandler(ws, data);
+      await messsageHandler(ws, data);
     } else {
       console.warn(`Client ${clientId} is not connected`);
     }

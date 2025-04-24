@@ -32,6 +32,7 @@ import processAttentionCheck from "../functions/attention/processAttentionCheck.
 import processDoubts from "../functions/doubt/processDoubts.js";
 // Log
 import LOG from "../log/LOG.js";
+import { testLocalLLM } from "./ai/test.js";
 
 let educatorOnline = false;
 
@@ -856,6 +857,24 @@ function messsageHandler(ws, data) {
           question: message.question,
           options: message.options,
           timeRemaining: 60,
+        });
+      }
+    } else if (message.type === "test_local_llm") {
+      if (ws.role === "admin") {
+        testLocalLLM().then((success) => {
+          if (success) {
+            ws.send(
+              JSON.stringify({
+                type: "test_local_llm_success",
+              })
+            );
+          } else {
+            ws.send(
+              JSON.stringify({
+                type: "test_local_llm_failure",
+              })
+            );
+          }
         });
       }
     } else {

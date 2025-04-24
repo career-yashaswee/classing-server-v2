@@ -3,14 +3,28 @@ version: "3.8"
 services:
   app:
     build: .
-    container_name: classing-container
+    container_name: classing-server
     ports:
       - "8080:8080"
     env_file:
       - .env
-    depends_on:
-      - mongodb
+  mongo:
+    image: mongo:7
+    container_name: local-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
 
-  mongodb:
-    image: mongo:7.0
-    container_name: mongodb-container
+  backend:
+    build: .
+    container_name: express-backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data:
