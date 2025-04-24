@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
 
 import activityCollectionRoutes from "../routes/activityRoutes.js";
@@ -105,10 +104,9 @@ app.use((err, req, res, next) => {
 
 // Set PORT dynamically.
 const PORT = process.env.DB_PORT || 3000;
-const HOST = process.env.DB_HOSTNAME || "localhost";
 
-app.listen(PORT, HOST, () => {
-  console.log(`SERVER [${HOST}:${PORT}]`);
+app.listen(PORT, () => {
+  console.log(`SERVER [http://localhost:${PORT}]`);
 });
 
 socket();
