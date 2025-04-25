@@ -13,10 +13,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Install Ollama
-
 RUN npm install -g ollama
 RUN ollama run llama3.2:1b || true
-
 
 # Clone the repository
 WORKDIR /classing

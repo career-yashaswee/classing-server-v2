@@ -1,5 +1,7 @@
 🔹 Docker Concepts
 
+BUILD(Without Cache): docker-compose build --no-cache && docker-compose up
+
 🔸 Layers of Docker
 Docker images are built in layers. Each command in the Dockerfile creates a new layer. When rebuilding, 
 unchanged layers are reused from the cache, which speeds up the build process.

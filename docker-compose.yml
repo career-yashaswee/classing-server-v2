@@ -3,14 +3,14 @@ version: "3.8"
 services:
   app:
     build: .
-    container_name: classing-server
+    container_name: classing-server # App (Vite + React)
     ports:
       - "8080:8080"
     env_file:
       - .env
   mongo:
     image: mongo:7
-    container_name: local-mongo
+    container_name: local-mongo # MongoDB Community Edition
     ports:
       - "27017:27017"
     volumes:
@@ -18,7 +18,7 @@ services:
 
   backend:
     build: .
-    container_name: express-backend
+    container_name: express-backend # Express Backend
     ports:
       - "3005:3005"
     env_file:
